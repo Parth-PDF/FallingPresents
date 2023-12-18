@@ -13,7 +13,7 @@ const Physics = (entities) => {
   return newEntities;
 };
 
-const RemoveOffscreenObjects = (entities, { dispatch }) => {
+const PresentObjectOffScreen = (entities, { dispatch }) => {
   Object.keys(entities).forEach(key => {
     if (entities[key].position && entities[key].position.y > height) {
       dispatch({ type: 'game-over' });
@@ -22,4 +22,4 @@ const RemoveOffscreenObjects = (entities, { dispatch }) => {
   return entities;
 };
 
-export { Physics, RemoveOffscreenObjects };
+export { Physics, PresentObjectOffScreen };

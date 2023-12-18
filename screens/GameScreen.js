@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { Text, Dimensions, StyleSheet } from 'react-native';
 import { GameEngine } from 'react-native-game-engine';
-import { Physics, RemoveOffscreenObjects } from '../systems/Controls';
+import { Physics, PresentObjectOffScreen } from '../systems/Controls';
 import FallingObject from '../components/FallingObject';
 
 const { width } = Dimensions.get('window');
 
 const GameScreen = ({ running, score, setScore, onGameOver }) => {
-  const [clicked, setClicked] = useState(-1);
+  const [presentClicked, setPresentClicked] = useState(-1);
   const [entities, setEntities] = useState({});
 
   const handleTouch = (index) => {
-    setClicked(index);
+    setPresentClicked(index);
     setScore(currentScore => currentScore + 1);
   };
 
@@ -33,18 +33,18 @@ const GameScreen = ({ running, score, setScore, onGameOver }) => {
   }, []);
 
   useEffect(() => {
-    if (clicked >= 0) {
+    if (presentClicked >= 0) {
       const newEntities = { ...entities };
       for (const key in newEntities) {
-        if (newEntities[key].id === clicked) {
+        if (newEntities[key].id === presentClicked) {
           newEntities[key].position.y = 0;
           break;
         }
       }
-      setClicked(-1);
+      setPresentClicked(-1);
       setEntities(newEntities);
     }
-  }, [clicked, entities]);
+  }, [presentClicked, entities]);
 
   const onEvent = (e) => {
     if (e.type === 'game-over') {
@@ -62,7 +62,7 @@ const GameScreen = ({ running, score, setScore, onGameOver }) => {
               entities={entities}
               running={running}
               onEvent={onEvent}
-              systems={[Physics, RemoveOffscreenObjects]}
+              systems={[Physics, PresentObjectOffScreen]}
             >
               <Text style={styles.score}>Score: {score}</Text>
             </GameEngine >
